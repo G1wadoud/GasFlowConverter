@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Gas Flow Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --primary-hover: #357ABD;
+            --background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--background);
+            padding: 1rem;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 480px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 2.5rem;
+                border-radius: 1.5rem;
+            }
+        }
+
+        h1 {
+            color: #2d3436;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .button-group {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.75rem;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+            margin: 0.75rem 0;
+        }
+
+        .result {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3436;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔁 Gas Flow Converter</h1>
+        
+        <div id="converter">
+            <div class="button-group">
+                <button onclick="showKgToPercentage()">
+                    ⚖️ kg/hr → %
+                </button>
+                <button onclick="showPercentageToKg()">
+                    📈 % → kg/hr
+                </button>
+            </div>
+        </div>
+
+        <div id="kgToPercentage" class="hidden">
+            <input type="number" id="kgInput" placeholder="Enter gas flow (kg/hr)">
+            <button onclick="convertKgToPercentage()">Convert</button>
+            <div class="result" id="kgResult"></div>
+            <button onclick="goBack()" class="back-button">← Back</button>
+        </div>
+
+        <div id="percentageToKg" class="hidden">
+            <input type="number" id="percentInput" placeholder="Enter percentage">
+            <button onclick="convertPercentageToKg()">Convert</button>
+            <div class="result" id="percentResult"></div>
+            <button onclick="goBack()" class="back-button">← Back</button>
+        </div>
+    </div>
+
+    <script>
+        const MAX_FLOW = 319290;
+
+        function showKgToPercentage() {
+            document.getElementById('converter').classList.add('hidden');
+            document.getElementById('kgToPercentage').classList.remove('hidden');
+        }
+
+        function showPercentageToKg() {
+            document.getElementById('converter').classList.add('hidden');
+            document.getElementById('percentageToKg').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('kgToPercentage').classList.add('hidden');
+            document.getElementById('percentageToKg').classList.add('hidden');
+            document.getElementById('converter').classList.remove('hidden');
+        }
+
+        function convertKgToPercentage() {
+            const flow = parseFloat(document.getElementById('kgInput').value);
+            const percentage = ((flow / MAX_FLOW) * 100).toFixed(2);
+            document.getElementById('kgResult').innerHTML = `
+                <div style="color: var(--primary);">${flow} kg/hr =</div>
+                <div style="font-size: 1.25rem; margin-top: 0.5rem;">${percentage}%</div>
+            `;
+        }
+
+        function convertPercentageToKg() {
+            const percent = parseFloat(document.getElementById('percentInput').value);
+            const gasflow = ((percent * MAX_FLOW) / 100).toFixed(2);
+            document.getElementById('percentResult').innerHTML = `
+                <div style="color: var(--primary);">${percent}% =</div>
+                <div style="font-size: 1.25rem; margin-top: 0.5rem;">${gasflow} kg/hr</div>
+            `;
+        }
+    </script>
+</body>
+</html>
